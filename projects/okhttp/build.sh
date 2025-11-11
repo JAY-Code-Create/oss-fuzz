@@ -13,17 +13,27 @@ JAZZER_API="/usr/local/share/jazzer/api"
 # Example (uncomment and adjust):
 # git clone --depth 1 https://github.com/square/okhttp.git "$OKHTTP_SRC_DIR"
 
-# Build OkHttp with Gradle wrapper, preferring the JVM target for MPP
-if [ -f "$OKHTTP_SRC_DIR/gradlew" ]; then
+# Build OkHttp with Gradle (prefer system gradle to avoid wrapper downloads)
+GRADLE_CMD=""
+if command -v gradle >/dev/null 2>&1; then
+  GRADLE_CMD="$(command -v gradle)"
+elif [ -f "$OKHTTP_SRC_DIR/gradlew" ]; then
+  GRADLE_CMD="$OKHTTP_SRC_DIR/gradlew"
+fi
+
+if [ -n "$GRADLE_CMD" ]; then
   pushd "$OKHTTP_SRC_DIR" >/dev/null
   # Try the MPP JVM jar task first; fall back to assemble
-  if ./gradlew --no-daemon :okhttp:jvmJar -x test -x javadoc; then
+  if "$GRADLE_CMD" --no-daemon :okhttp:jvmJar -x test -x javadoc; then
     echo "Built :okhttp:jvmJar"
   else
     echo ":okhttp:jvmJar not available, trying :okhttp:assemble"
-    ./gradlew --no-daemon :okhttp:assemble -x test -x javadoc
+    "$GRADLE_CMD" --no-daemon :okhttp:assemble -x test -x javadoc
   fi
   popd >/dev/null
+else
+  echo "Gradle not found; please ensure gradle is installed in the image." >&2
+  exit 1
 fi
 
 # Prepare jazzer target(s)

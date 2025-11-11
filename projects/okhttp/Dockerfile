@@ -3,6 +3,12 @@ FROM gcr.io/oss-fuzz-base/base-builder-jvm
 # Install Gradle (wrapper usable too, but install for convenience)
 RUN apt-get update && apt-get install -y curl unzip && rm -rf /var/lib/apt/lists/*
 
+ARG GRADLE_VERSION=9.2
+RUN curl -fsSL "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -o /tmp/gradle.zip \
+    && unzip -q /tmp/gradle.zip -d /opt/gradle \
+    && rm /tmp/gradle.zip
+ENV PATH="/opt/gradle/gradle-${GRADLE_VERSION}/bin:${PATH}"
+
 # Copy OkHttp source and fuzz module into image at /src/okhttp
 # In OSS-Fuzz production, the infra clones the main repo based on project.yaml.
 # For local testing you can COPY your fork or let build.sh fetch it.
@@ -16,4 +22,3 @@ COPY fuzz /src/okhttp/fuzz
 ENV MAVEN_OPTS=-Xmx2g
 
 RUN chmod +x /src/build.sh /src/okhttp/build.sh
-
