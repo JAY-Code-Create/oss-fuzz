@@ -60,6 +60,12 @@ javac -encoding UTF-8 -cp "$CLASSPATH" "$FUZZ_SRC_DIR/UrlFuzzer.java" -d "$FUZZ_
 # Package runtime: copy needed jars and fuzzer classes into $OUT
 cp -f $OKHTTP_SRC_DIR/okhttp/build/libs/*.jar "$OUT" 2>/dev/null || true
 cp -f /usr/local/share/jazzer/*.jar "$OUT" 2>/dev/null || true
+# Copy jazzer drivers expected by OSS-Fuzz runner
+if [ -d /usr/local/share/jazzer/bin ]; then
+  cp -f /usr/local/share/jazzer/bin/jazzer_driver "$OUT" 2>/dev/null || true
+  cp -f /usr/local/share/jazzer/bin/jazzer_driver_with_sanitizer "$OUT" 2>/dev/null || true
+  chmod +x "$OUT"/jazzer_driver* 2>/dev/null || true
+fi
 mkdir -p "$OUT/fuzzer-classes"
 cp -r "$FUZZ_BUILD_DIR"/* "$OUT/fuzzer-classes" 2>/dev/null || true
 
