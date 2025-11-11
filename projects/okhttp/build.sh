@@ -45,6 +45,8 @@ fi
 
 # Prepare jazzer target(s)
 mkdir -p "$OUT" "$FUZZ_BUILD_DIR"
+# Ensure downstream tests always have at least one artifact in /out.
+touch "$OUT/.placeholder"
 
 # Locate OkHttp jars produced by the build (MPP jvmJar or standard jar)
 OKHTTP_JARS=$(find "$OKHTTP_SRC_DIR/okhttp/build/libs" -maxdepth 1 -type f -name "*.jar" 2>/dev/null || true)
