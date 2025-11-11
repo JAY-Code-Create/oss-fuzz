@@ -1,4 +1,4 @@
-FROM gcr.io/oss-fuzz-base/base-builder-java
+FROM gcr.io/oss-fuzz-base/base-builder-jvm
 
 # Install Gradle (wrapper usable too, but install for convenience)
 RUN apt-get update && apt-get install -y curl unzip && rm -rf /var/lib/apt/lists/*
