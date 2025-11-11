@@ -17,7 +17,7 @@ WORKDIR /src/okhttp
 # Copy build scripts and fuzzers (adjust if you vendor fuzz module in the repo)
 COPY build.sh /src/build.sh
 COPY build.sh /src/okhttp/build.sh
-COPY fuzz /src/okhttp/fuzz
+COPY fuzz /opt/okhttp-fuzz
 
 ENV MAVEN_OPTS=-Xmx2g
 

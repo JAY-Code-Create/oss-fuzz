@@ -8,6 +8,7 @@ OKHTTP_SRC_DIR="/src/okhttp"
 FUZZ_SRC_DIR="$OKHTTP_SRC_DIR/fuzz"
 FUZZ_BUILD_DIR="$FUZZ_SRC_DIR/build"
 JAZZER_API="/usr/local/share/jazzer/api"
+DEFAULT_FUZZ_SRC="/opt/okhttp-fuzz"
 
 # If the source is not already present under /src/okhttp, you can clone here.
 # Example (uncomment and adjust):
@@ -34,6 +35,12 @@ if [ -n "$GRADLE_CMD" ]; then
 else
   echo "Gradle not found; please ensure gradle is installed in the image." >&2
   exit 1
+fi
+
+# Ensure fuzz harness exists (copy from image if not present in source)
+if [ ! -f "$FUZZ_SRC_DIR/UrlFuzzer.java" ] && [ -d "$DEFAULT_FUZZ_SRC" ]; then
+  mkdir -p "$FUZZ_SRC_DIR"
+  cp -r "$DEFAULT_FUZZ_SRC"/. "$FUZZ_SRC_DIR/"
 fi
 
 # Prepare jazzer target(s)
