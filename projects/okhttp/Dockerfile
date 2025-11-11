@@ -9,10 +9,11 @@ RUN apt-get update && apt-get install -y curl unzip && rm -rf /var/lib/apt/lists
 WORKDIR /src/okhttp
 
 # Copy build scripts and fuzzers (adjust if you vendor fuzz module in the repo)
+COPY build.sh /src/build.sh
 COPY build.sh /src/okhttp/build.sh
 COPY fuzz /src/okhttp/fuzz
 
 ENV MAVEN_OPTS=-Xmx2g
 
-RUN chmod +x /src/okhttp/build.sh
+RUN chmod +x /src/build.sh /src/okhttp/build.sh
 
