@@ -3,7 +3,7 @@ FROM gcr.io/oss-fuzz-base/base-builder-jvm
 # Install Gradle (wrapper usable too, but install for convenience)
 RUN apt-get update && apt-get install -y curl unzip && rm -rf /var/lib/apt/lists/*
 
-ARG GRADLE_VERSION=9.2
+ARG GRADLE_VERSION=8.10.2
 RUN curl -fsSL "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -o /tmp/gradle.zip \
     && unzip -q /tmp/gradle.zip -d /opt/gradle \
     && rm /tmp/gradle.zip
